@@ -4,27 +4,25 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
             $table->integer('id')->primary();
             $table->string('name');
-            $table->float('price');
-            $table->integer('stock');
-            $table->string('picture')->nullable();
-            $table->enum('status', ['draft', 'published'])->default('draft');
-            $table->integer('bier_id')->nullable();
+            $table->string('description');
+            $table->integer('supplier_id');
+            $table->integer('category_id');
             $table->dateTime('created_at');
-    
-            $table->foreign('bier_id')->references('id')->on('biers')->onDelete('set null');
+
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+
         });
     }
-    
 
     /**
      * Reverse the migrations.

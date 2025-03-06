@@ -17,11 +17,11 @@ return new class extends Migration
             $table->text('content');
             $table->integer('rate');
             $table->integer('user_id');
-            $table->integer('bier_id');
+            $table->integer('product_id');
             $table->dateTime('created_at');
     
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('bier_id')->references('id')->on('biers')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
     
