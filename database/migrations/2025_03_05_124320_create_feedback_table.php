@@ -4,33 +4,33 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateFeedbackTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
     public function up()
     {
-        Schema::create('feedbacks', function (Blueprint $table) {
-            $table->integer('id')->primary();
-            $table->string('title');
-            $table->text('content');
-            $table->integer('rate');
-            $table->integer('user_id');
-            $table->integer('product_id');
-            $table->dateTime('created_at');
-    
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+        Schema::create('feedback', function (Blueprint $table) {
+            $table->id(); 
+            $table->string('title'); 
+            $table->text('content'); 
+            $table->integer('rate'); 
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->timestamps(); 
         });
     }
-    
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('feedback');
     }
-};
+}

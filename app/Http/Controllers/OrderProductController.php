@@ -2,48 +2,83 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 
 class OrderProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Affiche la liste des associations commande-produit.
      */
     public function index()
     {
-        //
+        $orderProducts = OrderProduct::all();
+        return response()->json($orderProducts);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Crée une nouvelle association commande-produit.
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'order_id' => 'required|exists:orders,id',
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $orderProduct = OrderProduct::create($validated);
+
+        return response()->json($orderProduct, 201);
     }
 
     /**
-     * Display the specified resource.
+     * Affiche une association commande-produit spécifique.
      */
     public function show(string $id)
     {
-        //
+        $orderProduct = OrderProduct::find($id);
+
+        if (!$orderProduct) {
+            return response()->json(['error' => 'OrderProduct not found'], 404);
+        }
+
+        return response()->json($orderProduct);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Met à jour une association commande-produit existante.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $orderProduct = OrderProduct::find($id);
+
+        if (!$orderProduct) {
+            return response()->json(['error' => 'OrderProduct not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'quantity' => 'sometimes|required|integer|min:1',
+        ]);
+
+        $orderProduct->update($validated);
+
+        return response()->json($orderProduct);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Supprime une association commande-produit.
      */
     public function destroy(string $id)
     {
-        //
+        $orderProduct = OrderProduct::find($id);
+
+        if (!$orderProduct) {
+            return response()->json(['error' => 'OrderProduct not found'], 404);
+        }
+
+        $orderProduct->delete();
+
+        return response()->json(['message' => 'OrderProduct deleted successfully']);
     }
 }

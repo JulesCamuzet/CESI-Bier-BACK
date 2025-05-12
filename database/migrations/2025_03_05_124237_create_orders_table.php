@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->id(); 
             $table->float('total_cost');
             $table->string('payment_key');
             $table->boolean('is_paid');
@@ -21,11 +21,12 @@ return new class extends Migration
             $table->string('zip_code');
             $table->string('city');
             $table->string('country');
-            $table->integer('user_id');
-            $table->dateTime('created_at');
+
+            $table->unsignedBigInteger('user_id');
+
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
         });
     }
 

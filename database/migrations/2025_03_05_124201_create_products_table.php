@@ -11,22 +11,24 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->id(); 
             $table->string('name');
-            $table->string('description');
-            $table->integer('supplier_id');
-            $table->integer('category_id');
-            $table->dateTime('created_at');
-
+            $table->string('description')->nullable(); 
+            $table->decimal('price', 8, 2); 
+            $table->integer('stock');
+            $table->string('picture');
+            $table->string('status');
+            $table->unsignedBigInteger('supplier_id');
+            $table->unsignedBigInteger('category_id');
+            $table->timestamps();
+ 
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-
+            
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+   
     public function down(): void
     {
         Schema::dropIfExists('products');

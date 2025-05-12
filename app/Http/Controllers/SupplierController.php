@@ -1,49 +1,57 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $suppliers = Supplier::all();
+        return response()->json($suppliers);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'contact_email' => 'required|email',
+        ]);
+        $supplier = Supplier::create($validated);
+        return response()->json($supplier, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $supplier = Supplier::find($id);
+        if (!$supplier) {
+            return response()->json(['error' => 'Supplier not found'], 404);
+        }
+        return response()->json($supplier);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $supplier = Supplier::find($id);
+        if (!$supplier) {
+            return response()->json(['error' => 'Supplier not found'], 404);
+        }
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:255',
+            'contact_email' => 'sometimes|required|email',
+        ]);
+        $supplier->update($validated);
+        return response()->json($supplier);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $supplier = Supplier::find($id);
+        if (!$supplier) {
+            return response()->json(['error' => 'Supplier not found'], 404);
+        }
+        $supplier->delete();
+        return response()->json(['message' => 'Supplier deleted successfully']);
     }
 }
