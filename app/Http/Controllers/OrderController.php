@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Order;
@@ -17,8 +18,15 @@ class OrderController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'status' => 'required|string|max:255',
-            'total_price' => 'required|numeric',
+            'total_cost' => 'required|numeric',
+            'payment_key' => 'nullable|string|max:255',
+            'is_paid' => 'required|boolean',
+            'adress' => 'required|string|max:255',  // ou "address" si tu corriges
+            'zip_code' => 'required|string|max:20',
+            'city' => 'required|string|max:100',
+            'country' => 'required|string|max:100',
         ]);
+
         $order = Order::create($validated);
         return response()->json($order, 201);
     }
@@ -38,10 +46,18 @@ class OrderController extends Controller
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
+
         $validated = $request->validate([
             'status' => 'sometimes|required|string|max:255',
-            'total_price' => 'sometimes|required|numeric',
+            'total_cost' => 'sometimes|required|numeric',
+            'payment_key' => 'nullable|string|max:255',
+            'is_paid' => 'sometimes|required|boolean',
+            'adress' => 'sometimes|required|string|max:255',
+            'zip_code' => 'sometimes|required|string|max:20',
+            'city' => 'sometimes|required|string|max:100',
+            'country' => 'sometimes|required|string|max:100',
         ]);
+
         $order->update($validated);
         return response()->json($order);
     }

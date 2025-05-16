@@ -23,7 +23,6 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('feedbacks', FeedbackController::class);
-Route::apiResource('pictures',  LoginController::class);
 Route::apiResource('orders', OrderController::class);
 Route::apiResource('orderproducts', OrderProductController::class);
 Route::apiResource('pictures', PictureController::class);

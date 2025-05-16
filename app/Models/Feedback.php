@@ -7,7 +7,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Feedback extends Model
 {
-    use HasFactory;  // Assurez-vous que le trait est bien utilisé
+    use HasFactory;
 
-    // Les autres propriétés et méthodes de votre modèle Feedback
+   
+    protected $fillable = [
+        'title',
+        'content',
+        'rate',
+        'user_id',
+        'product_id',
+    ];
+
+   
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+  
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

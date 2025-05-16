@@ -10,16 +10,43 @@ class Order extends Model
     use HasFactory;
 
     /**
-     * Get the order items for the order.
+     * Champs autorisés à être insérés/mis à jour en masse.
+     */
+    protected $fillable = [
+        'user_id',
+        'status',
+        'total_cost',
+        'payment_key',
+        'is_paid',
+        'adress',     // à renommer éventuellement en 'address'
+        'zip_code',
+        'city',
+        'country',
+    ];
+
+    /**
+     * Relation : une commande a plusieurs OrderItems.
      */
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    /**
+     * Relation : une commande contient plusieurs produits via order_products (pivot).
+     */
     public function products()
     {
         return $this->belongsToMany(Product::class, 'order_products')
-            ->withPivot('quantity');
+                    ->withPivot('quantity')
+                    ->withTimestamps();
     }
 
+    /**
+     * Relation : une commande appartient à un utilisateur.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
