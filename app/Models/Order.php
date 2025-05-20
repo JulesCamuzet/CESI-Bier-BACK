@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -12,7 +13,12 @@ class Order extends Model
     /**
      * Champs autorisés à être insérés/mis à jour en masse.
      */
-    protected $fillable = [
+    public function jsonSerialize(): mixed
+{
+  return $this->convertKeysToCamelCase(parent::jsonSerialize());
+}
+
+protected $fillable = [
         'user_id',
         'status',
         'total_cost',
@@ -23,6 +29,15 @@ class Order extends Model
         'city',
         'country',
     ];
+
+    protected function convertKeysToCamelCase(array $attributes): array
+    {
+        $converted = [];
+        foreach ($attributes as $key => $value) {
+            $converted[Str::camel($key)] = $value;
+        }
+        return $converted;
+    }
 
     /**
      * Relation : une commande a plusieurs OrderItems.
