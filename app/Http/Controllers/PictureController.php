@@ -2,48 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class PictureController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $orders = Order::all();
+        return response()->json($orders);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'status' => 'required|string|max:255',
+            'total_cost' => 'required|numeric',
+            'payment_key' => 'nullable|string|max:255',
+            'is_paid' => 'required|boolean',
+            'adress' => 'required|string|max:255',  // ou "address" si tu corriges
+            'zip_code' => 'required|string|max:20',
+            'city' => 'required|string|max:100',
+            'country' => 'required|string|max:100',
+        ]);
+
+        $order = Order::create($validated);
+        return response()->json($order, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $order = Order::find($id);
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+        return response()->json($order);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $order = Order::find($id);
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'filename' => 'sometimes|required|string|max:255',
+            'product_id' => 'sometimes|required|exists:product_id', 
+          
+        ]);
+      
+        $order->update($validated);
+        return response()->json($order);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $order = Order::find($id);
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+        $order->delete();
+        return response()->json(['message' => 'Order deleted successfully']);
     }
 }

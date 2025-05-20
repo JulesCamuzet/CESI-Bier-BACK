@@ -7,18 +7,14 @@ use Illuminate\Http\Request;
 
 class OrderProductController extends Controller
 {
-    /**
-     * Affiche la liste des associations commande-produit.
-     */
+   
     public function index()
     {
         $orderProducts = OrderProduct::all();
         return response()->json($orderProducts);
     }
 
-    /**
-     * Crée une nouvelle association commande-produit.
-     */
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -32,9 +28,7 @@ class OrderProductController extends Controller
         return response()->json($orderProduct, 201);
     }
 
-    /**
-     * Affiche une association commande-produit spécifique.
-     */
+
     public function show(string $id)
     {
         $orderProduct = OrderProduct::find($id);
@@ -46,9 +40,7 @@ class OrderProductController extends Controller
         return response()->json($orderProduct);
     }
 
-    /**
-     * Met à jour une association commande-produit existante.
-     */
+   
     public function update(Request $request, string $id)
     {
         $orderProduct = OrderProduct::find($id);
@@ -66,9 +58,7 @@ class OrderProductController extends Controller
         return response()->json($orderProduct);
     }
 
-    /**
-     * Supprime une association commande-produit.
-     */
+  
     public function destroy(string $id)
     {
         $orderProduct = OrderProduct::find($id);

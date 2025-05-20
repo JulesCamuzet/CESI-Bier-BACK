@@ -12,9 +12,6 @@ class Product extends Model
     use HasFactory, Notifiable;
     protected $table = 'products';
 
-    /**
-     * Sérialisation personnalisée : camelCase pour l'output JSON
-     */
     public function jsonSerialize(): mixed
     {
         return $this->convertKeysToCamelCase(parent::jsonSerialize());
@@ -30,12 +27,9 @@ class Product extends Model
         'status',
         'supplier_id',
         'category_id',
-
     ];
 
-    /**
-     * Convertit les clés snake_case en camelCase
-     */
+
     protected function convertKeysToCamelCase(array $attributes): array
     {
         $converted = [];
@@ -45,7 +39,6 @@ class Product extends Model
         return $converted;
     }
 
-    // Relations
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);

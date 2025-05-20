@@ -28,7 +28,8 @@ Route::apiResource('orderproducts', OrderProductController::class);
 Route::apiResource('pictures', PictureController::class);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('suppliers', SupplierController::class);
-Route::apiResource('users', UserController::class);
+Route::apiResource('users', controller: UserController::class);
+Route::middleware('auth:sanctum')->get('/users/me', [UserController::class, 'me']);
 
 
 
