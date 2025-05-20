@@ -2,38 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
+use App\Models\Picture;
 use Illuminate\Http\Request;
 
 class PictureController extends Controller
 {
     public function index()
     {
-        $orders = Order::all();
+        $orders = Picture::all();
         return response()->json($orders);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'status' => 'required|string|max:255',
-            'total_cost' => 'required|numeric',
-            'payment_key' => 'nullable|string|max:255',
-            'is_paid' => 'required|boolean',
-            'adress' => 'required|string|max:255',  // ou "address" si tu corriges
-            'zip_code' => 'required|string|max:20',
-            'city' => 'required|string|max:100',
-            'country' => 'required|string|max:100',
+            'product_id' => 'required|exists:products,id',
+            'filename' => 'required|string|max:255',
         ]);
-
-        $order = Order::create($validated);
-        return response()->json($order, 201);
+    
+        $picture = Picture::create($validated);
+    
+        return response()->json($picture, 201);
     }
+    
 
     public function show($id)
     {
-        $order = Order::find($id);
+        $order = Picture::find($id);
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
@@ -42,7 +37,7 @@ class PictureController extends Controller
 
     public function update(Request $request, $id)
     {
-        $order = Order::find($id);
+        $order = Picture::find($id);
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }
@@ -59,7 +54,7 @@ class PictureController extends Controller
 
     public function destroy($id)
     {
-        $order = Order::find($id);
+        $order = Picture::find($id);
         if (!$order) {
             return response()->json(['error' => 'Order not found'], 404);
         }

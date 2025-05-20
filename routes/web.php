@@ -16,9 +16,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/connexion', [LoginController::class, 'login'])->name('login');
-Route::post('/connexion', [LoginController::class, 'authenticate'])->name('login.authenticate');
+Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/register', [LoginController::class, 'register']);
 
 
 Route::apiResource('categories', CategoryController::class);
@@ -36,6 +36,9 @@ Route::middleware('auth:sanctum')->get('/users/me', [UserController::class, 'me'
 
 Route::get('/categories/{category}/products', [CategoryController::class, 'getProducts'])
     ->name('categories.products');
+
+Route::get('/feedbacks/{feedback}/products', [FeedbackController::class, 'getProducts'])
+    ->name('feedbacks.products');
 
 Route::get('/suppliers/{supplier}/biers', [SupplierController::class, 'getBiers'])
     ->name('suppliers.biers');
