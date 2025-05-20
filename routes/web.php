@@ -37,7 +37,7 @@ Route::middleware('auth:sanctum')->get('/users/me', [UserController::class, 'me'
 Route::get('/categories/{category}/products', [CategoryController::class, 'getProducts'])
     ->name('categories.products');
 
-Route::get('/feedbacks/{feedback}/products', [FeedbackController::class, 'getProducts'])
+Route::get('/feedbacks/{product_id}/feedbacks', [FeedbackController::class, 'getFeedbacks'])
     ->name('feedbacks.products');
 
 Route::get('/suppliers/{supplier}/biers', [SupplierController::class, 'getBiers'])

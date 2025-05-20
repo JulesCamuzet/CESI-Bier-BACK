@@ -77,4 +77,16 @@ class FeedbackController extends Controller
 
         return response()->json(['message' => 'Feedback deleted successfully']);
     }
+
+
+    public function getFeedbacks(string $product_id)
+    {
+        $feedbacks = Feedback::where('product_id', $product_id)->get();
+    
+        if ($feedbacks->isEmpty()) {
+            return response()->json(['message' => 'Aucun feedback trouvé pour ce produit.'], 404);
+        }
+    
+        return response()->json($feedbacks);
+    }
 }
