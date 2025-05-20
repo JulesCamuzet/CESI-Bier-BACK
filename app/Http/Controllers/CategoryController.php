@@ -7,14 +7,12 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    // Affiche la liste de toutes les catégories
     public function index()
     {
         $categories = Category::all();
         return response()->json($categories);
     }
 
-    // Crée une nouvelle catégorie
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -26,14 +24,12 @@ class CategoryController extends Controller
         return response()->json($category, 201);
     }
 
-    // Affiche une catégorie spécifique par ID
     public function show(string $id)
     {
         $category = Category::findOrFail($id);
         return response()->json($category);
     }
 
-    // Met à jour une catégorie existante
     public function update(Request $request, string $id)
     {
         $category = Category::findOrFail($id);
@@ -47,7 +43,6 @@ class CategoryController extends Controller
         return response()->json($category);
     }
 
-    // Supprime une catégorie par ID
     public function destroy(string $id)
     {
         $category = Category::findOrFail($id);
@@ -56,7 +51,6 @@ class CategoryController extends Controller
         return response()->json(['message' => 'Catégorie supprimée avec succès']);
     }
 
-    // Récupère les produits liés à une catégorie
     public function getProducts(string $id)
     {
         $category = Category::with('products')->findOrFail($id);

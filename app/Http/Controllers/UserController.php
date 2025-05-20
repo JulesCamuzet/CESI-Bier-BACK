@@ -5,20 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    /**
-     * Affiche la liste des utilisateurs.
-     */
+   
     public function index()
     {
         return response()->json(User::all(), 200);
     }
 
-    /**
-     * Crée un nouvel utilisateur.
-     */
+    
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -32,25 +29,32 @@ class UserController extends Controller
             'is_admin' => 'boolean',
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+      $validated['password'] = Hash::make($validated['password']);
 
         $user = User::create($validated);
 
-        return response()->json($user, 201);
+        return response()->json($user, status: 201);
     }
 
-    /**
-     * Affiche un utilisateur spécifique.
-     */
-    public function show(string $id)
-    {
-        $user = User::findOrFail($id);
-        return response()->json($user);
+    public function me()
+{
+    $user = Auth::user(); 
+    return response()->json($user);
+}
+
+
+public function show(string $id)
+{
+    $user = User::findOrFail($id);
+
+    if (auth()->id() != $user->id) {
+        return response()->json(['error' => 'Accès refusé.'], 403);
     }
 
-    /**
-     * Met à jour un utilisateur.
-     */
+    return response()->json($user);
+}
+
+
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
@@ -61,7 +65,7 @@ class UserController extends Controller
             'last_name' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $id,
             'phone' => 'nullable|string|max:20',
-            'profile_picture' => 'nullable|string',
+            'profile_picture' => 'nullable|string',   
             'password' => 'nullable|string|min:8',
             'is_admin' => 'boolean',
         ]);
@@ -75,9 +79,7 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    /**
-     * Supprime un utilisateur.
-     */
+    
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);

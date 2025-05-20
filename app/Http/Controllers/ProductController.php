@@ -50,7 +50,6 @@ class ProductController extends Controller
  
     public function update(Request $request, string $id)
     {
-        // Validation des données reçues
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',

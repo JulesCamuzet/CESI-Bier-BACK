@@ -16,9 +16,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/connexion', [LoginController::class, 'login'])->name('login');
-Route::post('/connexion', [LoginController::class, 'authenticate'])->name('login.authenticate');
+Route::post('/login', [LoginController::class, 'authenticate'])->name('login.authenticate');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/register', [LoginController::class, 'register']);
 
 
 Route::apiResource('categories', CategoryController::class);
@@ -28,13 +28,17 @@ Route::apiResource('orderproducts', OrderProductController::class);
 Route::apiResource('pictures', PictureController::class);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('suppliers', SupplierController::class);
-Route::apiResource('users', UserController::class);
+Route::apiResource('users', controller: UserController::class);
+Route::middleware('auth:sanctum')->get('/users/me', [UserController::class, 'me']);
 
 
 
 
 Route::get('/categories/{category}/products', [CategoryController::class, 'getProducts'])
     ->name('categories.products');
+
+Route::get('/feedbacks/{product_id}/feedbacks', [FeedbackController::class, 'getFeedbacks'])
+    ->name('feedbacks.products');
 
 Route::get('/suppliers/{supplier}/biers', [SupplierController::class, 'getBiers'])
     ->name('suppliers.biers');

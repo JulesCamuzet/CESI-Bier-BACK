@@ -18,9 +18,10 @@ class PictureFactory extends Factory
     {
         return [
             'product_id' => fake()->numberBetween(1, 10),
-            'filename' => fake()->name(),
-            'created_at' => fake()->dateTime(),
+            'filename' => fake()->imageUrl(640, 480, 'products', true), 
+            'created_at' => now(),
         ];
     }
+    
 } 
 

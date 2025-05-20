@@ -2,48 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Picture;
 use Illuminate\Http\Request;
 
 class PictureController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $orders = Picture::all();
+        return response()->json($orders);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'filename' => 'required|string|max:255',
+        ]);
+    
+        $picture = Picture::create($validated);
+    
+        return response()->json($picture, 201);
+    }
+    
+
+    public function show($id)
+    {
+        $order = Picture::find($id);
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+        return response()->json($order);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $order = Picture::find($id);
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+
+        $validated = $request->validate([
+            'filename' => 'sometimes|required|string|max:255',
+            'product_id' => 'sometimes|required|exists:product_id', 
+          
+        ]);
+      
+        $order->update($validated);
+        return response()->json($order);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $order = Picture::find($id);
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+        $order->delete();
+        return response()->json(['message' => 'Order deleted successfully']);
     }
 }
