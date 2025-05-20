@@ -24,13 +24,14 @@ Route::apiResource('orderproducts', OrderProductController::class);
 Route::apiResource('pictures', PictureController::class);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('suppliers', SupplierController::class);
-Route::apiResource('users', UserController::class);
-
-
-
+Route::apiResource('users', controller: UserController::class);
+Route::middleware('auth:sanctum')->get('/users/me', [UserController::class, 'me']);
 
 Route::get('/categories/{category}/products', [CategoryController::class, 'getProducts'])
     ->name('categories.products');
+
+Route::get('/feedbacks/{product_id}/feedbacks', [FeedbackController::class, 'getFeedbacks'])
+    ->name('feedbacks.products');
 
 Route::get('/suppliers/{supplier}/biers', [SupplierController::class, 'getBiers'])
     ->name('suppliers.biers');
