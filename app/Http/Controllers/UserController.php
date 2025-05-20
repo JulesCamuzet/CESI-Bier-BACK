@@ -33,7 +33,7 @@ class UserController extends Controller
 
         $user = User::create($validated);
 
-        return response()->json($user, status: 201);
+        return response()->json(['message' => 'Utilisateur créé avec succès', 'user' => $user], 201);
     }
 
     public function me()
@@ -60,13 +60,13 @@ public function show(string $id)
         $user = User::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'first_name' => 'sometimes|string|max:255',
-            'last_name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|email|unique:users,email,' . $id,
+            'name' => 'required|string|max:255',
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string|max:20',
-            'profile_picture' => 'nullable|string',   
-            'password' => 'nullable|string|min:8',
+            'profile_picture' => 'nullable|string',
+            'password' => 'required|string|min:8',
             'is_admin' => 'boolean',
         ]);
 
