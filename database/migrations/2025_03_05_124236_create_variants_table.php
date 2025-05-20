@@ -15,10 +15,10 @@ return new class extends Migration {
             $table->string('name');
             $table->float('price');
             $table->integer('stock');
-            $table->string('picture')->nullable();
+            $table->string('picture');
             $table->enum('status', ['draft', 'published'])->default('draft');
 
-            $table->unsignedBigInteger('product_id')->nullable();
+            $table->unsignedBigInteger('product_id');
 
             $table->timestamps();
 

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id(); 
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->string('picture')->nullable();
+            $table->text('description');
+            $table->string('picture');
             $table->string('location'); 
             $table->timestamps();
         });

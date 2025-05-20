@@ -19,6 +19,8 @@ class SupplierFactory extends Factory
         return [
             'name' => fake()->company(),
             'location' => fake()->country(),
+            'description' => fake()->paragraph(),
+            'picture' => fake()->imageUrl()
         ];
     }
 }

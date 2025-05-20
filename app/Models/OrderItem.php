@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class OrderItem extends Model
 {
@@ -13,5 +14,19 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->convertKeysToCamelCase(parent::jsonSerialize());
+    }
+
+    protected function convertKeysToCamelCase(array $attributes): array
+    {
+        $converted = [];
+        foreach ($attributes as $key => $value) {
+            $converted[Str::camel($key)] = $value;
+        }
+        return $converted;
     }
 }
