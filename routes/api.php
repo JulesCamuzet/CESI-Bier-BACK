@@ -10,12 +10,20 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderProductController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\ExportDbController;
 
 // Auth
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
 Route::post('/register', [LoginController::class, 'register'])->name('register');
 Route::middleware('auth:sanctum')->get('/users/me', [UserController::class, 'me']);
+
+
+
+// DB
+Route::get('/export-db', [ExportDbController::class, 'export']);
+Route::get('/backup', [ExportDbController::class, 'downloadLatestBackup']);
+
 
 // USERS
 Route::get('/users', [UserController::class, 'index']);

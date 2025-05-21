@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,15 +10,9 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
-    public function jsonSerialize(): mixed
-    {
-        return $this->convertKeysToCamelCase(parent::jsonSerialize());
-    }
-
-protected $fillable = [
+    protected $fillable = [
         'name',
         'first_name',
         'last_name',
@@ -30,15 +23,6 @@ protected $fillable = [
         'is_admin',
     ];
 
-    protected function convertKeysToCamelCase(array $attributes): array
-    {
-        $converted = [];
-        foreach ($attributes as $key => $value) {
-            $converted[Str::camel($key)] = $value;
-        }
-        return $converted;
-    }
- 
     protected $hidden = [
         'password',
         'remember_token',
@@ -50,5 +34,20 @@ protected $fillable = [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function toArray(): array
+    {
+        $attributes = parent::toArray();
+        return $this->convertKeysToCamelCase($attributes);
+    }
+
+    protected function convertKeysToCamelCase(array $attributes): array
+    {
+        $converted = [];
+        foreach ($attributes as $key => $value) {
+            $converted[Str::camel($key)] = $value;
+        }
+        return $converted;
     }
 }

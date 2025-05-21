@@ -15,15 +15,34 @@ class PictureController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'product_id' => 'required|exists:products,id',
-            'filename' => 'required|string|max:255',
+            'pictures' => 'required|file|mimes:jpeg,jpg,png,gif|max:2048', // max 2MB
         ]);
     
-        $picture = Picture::create($validated);
+        if ($request->hasFile('pictures')) {
+            $file = $request->file('pictures');
+            $filename = time() . '_' . $file->getClientOriginalName();
     
-        return response()->json($picture, 201);
+            $path = $file->storeAs('public/pictures', $filename);
+    
+            $picture = Picture::create([
+                'product_id' => $request->product_id,
+                'filename' => $filename,
+            ]);
+    
+            return response()->json([
+                'message' => 'Image uploaded successfully',
+                'filename' => $filename,
+                'url' => asset('storage/pictures/' . $filename),
+            ]);
+        }
+    
+        return response()->json(['error' => 'No file uploaded'], 400);
     }
+    
+    
+    
     
 
     public function show($id)
