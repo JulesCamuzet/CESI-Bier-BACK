@@ -16,7 +16,9 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'contact_email' => 'required|email',
+            'description' => 'required|string',  
+            'picture' => 'nullable|string|max:255',
+            'location' => 'required|string|max:255',
         ]);
         $supplier = Supplier::create($validated);
         return response()->json($supplier, 201);
@@ -39,7 +41,9 @@ class SupplierController extends Controller
         }
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'contact_email' => 'sometimes|required|email',
+            'description' => 'sometimes|required|string',
+            'picture' => 'nullable|string|max:255',
+            'location' => 'sometimes|required|string|max:255',
         ]);
         $supplier->update($validated);
         return response()->json($supplier);

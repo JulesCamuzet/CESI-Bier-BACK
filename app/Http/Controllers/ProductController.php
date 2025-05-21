@@ -18,23 +18,10 @@ class ProductController extends Controller
    
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
-            'picture' => 'nullable|url', 
-            'status' => 'required|in:disponible,indisponible',
-            'supplier_id' => 'required|exists:suppliers,id', 
-            'category_id' => 'required|exists:categories,id', 
-            
-        ]);
-
-        $product = Product::create($validated);
-
-        return response()->json($product, 201); 
+        dd('store method reached');
     }
-
+    
+    
 
     public function show(string $id)
     {
@@ -52,7 +39,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|required|string',
+            'description' => 'required|string|max:255',
             'price' => 'sometimes|required|numeric',
             'stock' => 'sometimes|required|integer',
             'picture' => 'nullable|url', 

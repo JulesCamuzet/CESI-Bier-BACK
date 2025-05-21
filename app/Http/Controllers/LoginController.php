@@ -17,38 +17,29 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $credentials = $request->only('email', 'password');
+    
+        if (!Auth::attempt($credentials)) {
+            return response()->json(['message' => 'Identifiants invalides'], 401);
+        }
+    
+        $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+    
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
         ]);
-    
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-    
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'message' => 'Connecté avec succès',
-                    'user' => $request->user(),
-                ]);
-            }
-            return redirect()->intended('dashboard');
-        }
-    
-        $error = ['email' => 'Identifiants invalides.'];
-    
-        if ($request->wantsJson()) {
-            return response()->json(['errors' => $error], 422);
-        }
-    
-        return back()->withErrors($error)->onlyInput('email');
     }
+    
+    
 
     public function register(Request $request)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'], // le champ password_confirmation est attendu
+            'password' => ['required', 'string', 'min:8', 'confirmed'], 
         ]);
 
         $user = User::create([
@@ -70,14 +61,12 @@ class LoginController extends Controller
     }
     
 
-    public function logout(Request $request): RedirectResponse
+    public function logout(Request $request)
     {
-        Auth::logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return redirect('/');
+        // Supprime le token actuel de l'utilisateur connecté
+        $request->user()->currentAccessToken()->delete();
+    
+        return response()->json(['message' => 'Logged out successfully'], 200);
     }
+    
 }
