@@ -15,6 +15,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false, // ou true si tu utilises des cookies
+    'supports_credentials' => true, 
 
 ];

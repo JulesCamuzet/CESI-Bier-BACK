@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-   
+
     public function index()
     {
         return response()->json(User::all(), 200);
     }
 
-    
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -25,11 +25,11 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string|max:20',
             'profile_picture' => 'nullable|string',
-            'password' => 'required|string|min:8',
-            'is_admin' => 'boolean',
+            'password' => 'required|string|min:8|confirmed',
+            'is_admin' => 'nullable|boolean',
         ]);
 
-      $validated['password'] = Hash::make($validated['password']);
+        $validated['password'] = Hash::make($validated['password']);
 
         $user = User::create($validated);
 
@@ -37,22 +37,22 @@ class UserController extends Controller
     }
 
     public function me()
-{
-    $user = Auth::user(); 
-    return response()->json($user);
-}
-
-
-public function show(string $id)
-{
-    $user = User::findOrFail($id);
-
-    if (auth()->id() != $user->id) {
-        return response()->json(['error' => 'Accès refusé.'], 403);
+    {
+        $user = Auth::user();
+        return response()->json($user);
     }
 
-    return response()->json($user);
-}
+
+    public function show(string $id)
+    {
+        $user = User::findOrFail($id);
+
+        if (auth()->id() != $user->id) {
+            return response()->json(['error' => 'Accès refusé.'], 403);
+        }
+
+        return response()->json($user);
+    }
 
 
     public function update(Request $request, string $id)
@@ -63,7 +63,7 @@ public function show(string $id)
             'name' => 'required|string|max:255',
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'profile_picture' => 'nullable|string',
             'password' => 'required|string|min:8',
@@ -73,17 +73,24 @@ public function show(string $id)
         if (isset($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         }
+        if (auth()->id() != $user->id && !auth()->user()->is_admin) {
+            return response()->json(['error' => 'Accès refusé.'], 403);
+        }
 
         $user->update($validated);
 
         return response()->json($user);
     }
 
-    
+
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
         $user->delete();
+
+        if (auth()->id() != $user->id && !auth()->user()->is_admin) {
+            return response()->json(['error' => 'Accès refusé.'], 403);
+        }
 
         return response()->json(['message' => 'Utilisateur supprimé.']);
     }
