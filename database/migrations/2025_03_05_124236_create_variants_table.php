@@ -11,21 +11,22 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('variants', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->float('price');
-            $table->integer('stock');
-            $table->string('picture');
-            $table->enum('status', ['draft', 'published'])->default('draft');
+    $table->id();
+    $table->string('name');
+    $table->float('price');
+    $table->integer('stock');
+    $table->string('picture');
+    $table->enum('status', ['draft', 'published'])->default('draft');
 
-            $table->unsignedBigInteger('product_id');
+    $table->unsignedBigInteger('product_id')->nullable();
 
-            $table->timestamps();
+    $table->timestamps();
 
-            $table->foreign('product_id')
-                ->references('id')->on('products')
-                ->onDelete('set null');
-        });
+    $table->foreign('product_id')
+        ->references('id')->on('products')
+        ->onDelete('set null');
+});
+
     }
 
     /**

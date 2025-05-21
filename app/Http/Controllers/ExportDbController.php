@@ -8,7 +8,7 @@ class ExportDbController extends Controller
 {
     public function export()
     {
-        $dumpPath = 'D:\\xampp\\mysql\\bin\\mysqldump.exe';
+        $dumpPath = env('MYSQLDUMP_PATH', 'D:\\xampp\\mysql\\bin\\mysqldump.exe');
         $host = '127.0.0.1';
         $username = env('DB_USERNAME', 'root');
         $password = env('DB_PASSWORD', '');
@@ -37,15 +37,6 @@ class ExportDbController extends Controller
 
         file_put_contents($filePath, implode("\n", $output));
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Backup created.',
-            'file' => $fileName,
-        ]);
-    }
-
-    public function downloadLatestBackup()
-    {
         $fileName = 'backupbier.sql';
         $filePath = storage_path("app/{$fileName}");
 

@@ -84,7 +84,7 @@ class FeedbackController extends Controller
         $feedbacks = Feedback::where('product_id', $product_id)->get();
     
         if ($feedbacks->isEmpty()) {
-            return response()->json(['message' => 'Aucun feedback trouvé pour ce produit.'], 404);
+            return response()->json([], 200);
         }
     
         return response()->json($feedbacks);

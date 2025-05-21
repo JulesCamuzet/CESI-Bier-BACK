@@ -22,8 +22,6 @@ Route::middleware('auth:sanctum')->get('/users/me', [UserController::class, 'me'
 
 // DB
 Route::get('/export-db', [ExportDbController::class, 'export']);
-Route::get('/backup', [ExportDbController::class, 'downloadLatestBackup']);
-
 
 // USERS
 Route::get('/users', [UserController::class, 'index']);
@@ -54,7 +52,7 @@ Route::post('/feedbacks', [FeedbackController::class, 'store']);
 Route::get('/feedbacks/{id}', [FeedbackController::class, 'show']);
 Route::put('/feedbacks/{id}', [FeedbackController::class, 'update']);
 Route::delete('/feedbacks/{id}', [FeedbackController::class, 'destroy']);
-Route::get('/feedbacks/{product_id}/feedbacks', [FeedbackController::class, 'getFeedbacks']);
+Route::get('/products/{product_id}/feedbacks', [FeedbackController::class, 'getFeedbacks']);
 
 // ORDERS
 Route::get('/orders', [OrderController::class, 'index']);
