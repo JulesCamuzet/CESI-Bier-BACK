@@ -9,4 +9,4 @@ Route::get('/', function () {
     return 'Hello World';
 });
 
-Route::get('/checkout/{orderId}', [StripeController::class, 'createCheckoutSession']);
+

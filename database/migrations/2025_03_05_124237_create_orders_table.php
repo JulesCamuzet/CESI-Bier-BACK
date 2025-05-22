@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id(); 
             $table->float('total_cost');
             $table->string('payment_key');
-            $table->boolean('is_paid');
+            $table->text('payment_url');
             $table->string('status');
             $table->string('adress');
             $table->string('zip_code');

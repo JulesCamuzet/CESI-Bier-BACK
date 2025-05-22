@@ -7,38 +7,45 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-   
+
     public function index()
     {
-        $products = Product::all();
+        $user = auth()->user();
+
+        if ($user && $user->is_admin) {
+
+            $products = Product::all();
+        } else {
+            $products = Product::where('stock', '>', 0)
+                ->where('status', 'disponible')
+                ->get();
+        }
 
         return response()->json($products);
     }
 
-   
+
+
     public function store(Request $request)
-{
-    // Valider les données reçues
-    $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'required|string|max:255',
-        'price' => 'required|numeric',
-        'stock' => 'required|integer',
-        'picture' => 'nullable|url',
-        'status' => 'required|in:disponible,indisponible',
-        'supplier_id' => 'required|exists:suppliers,id',
-        'category_id' => 'required|exists:categories,id',
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'stock' => 'required|integer',
+            'picture' => 'nullable|url',
+            'status' => 'required|in:disponible,indisponible',
+            'supplier_id' => 'required|exists:suppliers,id',
+            'category_id' => 'required|exists:categories,id',
+        ]);
 
-    // Créer un nouveau produit
-    $product = Product::create($validated);
+            $product = Product::create($validated);
 
-    // Retourner une réponse JSON avec le nouveau produit et un code 201 (créé)
-    return response()->json($product, 201);
-}
+        return response()->json($product, 201);
+    }
 
-    
-    
+
+
 
     public function show(string $id)
     {
@@ -51,7 +58,7 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
- 
+
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
@@ -59,10 +66,10 @@ class ProductController extends Controller
             'description' => 'required|string|max:255',
             'price' => 'sometimes|required|numeric',
             'stock' => 'sometimes|required|integer',
-            'picture' => 'nullable|url', 
+            'picture' => 'nullable|url',
             'status' => 'sometimes|required|in:disponible,indisponible',
-            'supplier_id' => 'sometimes|required|exists:suppliers,id', 
-            'category_id' => 'sometimes|required|exists:categories,id', 
+            'supplier_id' => 'sometimes|required|exists:suppliers,id',
+            'category_id' => 'sometimes|required|exists:categories,id',
         ]);
 
         $product = Product::find($id);
@@ -76,7 +83,7 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
-  
+
     public function destroy(string $id)
     {
         $product = Product::find($id);

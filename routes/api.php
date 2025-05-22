@@ -11,6 +11,7 @@ use App\Http\Controllers\OrderProductController;
 use App\Http\Controllers\PictureController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ExportDbController;
+use App\Http\Controllers\StripeController;
 
 // Auth
 Route::post('/login', [LoginController::class, 'authenticate']);
@@ -18,10 +19,13 @@ Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'log
 Route::post('/register', [LoginController::class, 'register'])->name('register');
 Route::middleware('auth:sanctum')->get('/users/me', [UserController::class, 'me']);
 
+//stripe
+Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook']);
 
 
 // DB
 Route::get('/export-db', [ExportDbController::class, 'export']);
+Route::post('/import-db', [ExportDbController::class, 'import']);
 
 // USERS
 Route::get('/users', [UserController::class, 'index']);
@@ -53,6 +57,11 @@ Route::get('/feedbacks/{id}', [FeedbackController::class, 'show']);
 Route::put('/feedbacks/{id}', [FeedbackController::class, 'update']);
 Route::delete('/feedbacks/{id}', [FeedbackController::class, 'destroy']);
 Route::get('/products/{product_id}/feedbacks', [FeedbackController::class, 'getFeedbacks']);
+
+
+
+// Route::post('/place-order', [OrderController::class, 'place_order']);
+Route::middleware('auth:sanctum')->post('/place-order', [OrderController::class, 'place_order']);
 
 // ORDERS
 Route::get('/orders', [OrderController::class, 'index']);

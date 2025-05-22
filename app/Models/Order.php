@@ -5,30 +5,28 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+use App\Models\OrderItem;
 
 class Order extends Model
 {
     use HasFactory;
 
-    /**
-     * Champs autorisés à être insérés/mis à jour en masse.
-     */
-    public function jsonSerialize(): mixed
-{
-  return $this->convertKeysToCamelCase(parent::jsonSerialize());
-}
-
-protected $fillable = [
+    protected $fillable = [
         'user_id',
         'status',
         'total_cost',
         'payment_key',
-        'is_paid',
-        'adress',     // à renommer éventuellement en 'address'
+        'payment_url',
+        'adress',   
         'zip_code',
         'city',
         'country',
     ];
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->convertKeysToCamelCase(parent::jsonSerialize());
+    }
 
     protected function convertKeysToCamelCase(array $attributes): array
     {
@@ -39,27 +37,21 @@ protected $fillable = [
         return $converted;
     }
 
-    /**
-     * Relation : une commande a plusieurs OrderItems.
-     */
-    public function orderItems()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
-
-    /**
-     * Relation : une commande contient plusieurs produits via order_products (pivot).
-     */
+    // Relation Many-to-Many avec produits via la table pivot order_items
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'order_products')
+        return $this->belongsToMany(Product::class, 'order_items')
                     ->withPivot('quantity')
                     ->withTimestamps();
     }
 
-    /**
-     * Relation : une commande appartient à un utilisateur.
-     */
+    public function orderItems()
+{
+    return $this->hasMany(OrderItem::class);
+}
+
+
+    // Relation avec utilisateur
     public function user()
     {
         return $this->belongsTo(User::class);
