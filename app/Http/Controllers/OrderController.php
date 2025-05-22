@@ -7,8 +7,10 @@ use App\Models\Product;
 
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -37,7 +39,7 @@ class OrderController extends Controller
             'status' => 'required|string|max:255',
             'total_cost' => 'required|numeric',
             'payment_key' => 'nullable|string|max:255',
-            'adress' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
             'zip_code' => 'required|string|max:20',
             'city' => 'required|string|max:100',
             'country' => 'required|string|max:100',
@@ -57,7 +59,9 @@ class OrderController extends Controller
         }
 
         $data = $request->validate([
-            'adress' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'address' => 'required|string',
             'zip_code' => 'required|string',
             'city' => 'required|string',
             'country' => 'required|string',
@@ -84,9 +88,11 @@ class OrderController extends Controller
             // Créer la commande
             $order = new Order();
             $order->user_id = $user->id;
+            $order->first_name = $data['first_name'];
+            $order->last_name = $data['last_name'];
             $order->total_cost = $totalCost;
             $order->status = 'pending';
-            $order->adress = $data['adress'];
+            $order->address = $data['address'];
             $order->zip_code = $data['zip_code'];
             $order->city = $data['city'];
             $order->country = $data['country'];
@@ -201,7 +207,7 @@ class OrderController extends Controller
             'status' => 'sometimes|required|string|max:255',
             'total_cost' => 'sometimes|required|numeric',
             'payment_key' => 'nullable|string|max:255',
-            'adress' => 'sometimes|required|string|max:255',
+            'address' => 'sometimes|required|string|max:255',
             'zip_code' => 'sometimes|required|string|max:20',
             'city' => 'sometimes|required|string|max:100',
             'country' => 'sometimes|required|string|max:100',

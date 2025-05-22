@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id(); 
             $table->float('total_cost');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('payment_key');
             $table->text('payment_url');
             $table->string('status');
-            $table->string('adress');
+            $table->string('address');
             $table->string('zip_code');
             $table->string('city');
             $table->string('country');

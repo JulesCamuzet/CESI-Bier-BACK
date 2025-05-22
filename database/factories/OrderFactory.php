@@ -20,9 +20,11 @@ class OrderFactory extends Factory
         return [
             'total_cost' => fake()->randomFloat(2, 10, 500),
             'payment_key' => fake()->word(),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
             'payment_url' => 'https://checkout.stripe.com/pay/' . fake()->uuid(),
             'status' => fake()->randomElement(['pending', 'completed', 'canceled']),
-            'adress' => fake()->address(),
+            'address' => fake()->address(),
             'zip_code' => fake()->postcode(),
             'city' => fake()->city(),
             'country' => fake()->country(),
