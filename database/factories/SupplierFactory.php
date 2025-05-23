@@ -20,7 +20,7 @@ class SupplierFactory extends Factory
             'name' => fake()->company(),
             'location' => fake()->country(),
             'description' => fake()->paragraph(),
-            'picture' => fake()->imageUrl()
+            'picture' => fake()->imageUrl(640, 480), 
         ];
     }
 }
