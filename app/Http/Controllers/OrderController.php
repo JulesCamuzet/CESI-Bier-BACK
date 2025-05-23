@@ -164,6 +164,18 @@ class OrderController extends Controller
 
     public function show($id)
     {
+        function arrayKeysToCamelCase(array $array): array
+        {
+            $converted = [];
+
+            foreach ($array as $key => $value) {
+                $newKey = is_string($key) ? \Illuminate\Support\Str::camel($key) : $key;
+                $converted[$newKey] = is_array($value) ? arrayKeysToCamelCase($value) : $value;
+            }
+
+            return $converted;
+        }
+
         $user = auth()->user();
     
         if (!$user) {
@@ -177,15 +189,17 @@ class OrderController extends Controller
         }
     
         if ($user->is_admin || $order->user_id === $user->id) {
-            $orderData = $order->toArray();
+            $orderData = arrayKeysToCamelCase($order->toArray());
+
     
             $orderData['products'] = collect($order->products)->map(function ($product) {
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'quantity' => $product->pivot->quantity,  
-                ];
-            });
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'quantity' => $product->pivot->quantity,
+            ];
+            })->toArray();
+
     
             return response()->json($orderData);
         }

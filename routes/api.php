@@ -22,8 +22,8 @@ Route::middleware('auth:sanctum')->get('/users/me', [UserController::class, 'me'
 // STRIPE
 Route::post('/stripe/webhook', [StripeController::class, 'handleWebhook']);
 
+// FEEDBACKS
 // proteger par le role admin (POST / PUT / DELETE) grace au middleware
-Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
     // USERS
     Route::post('/users', [UserController::class, 'store']);
     Route::put('/users/{user}', [UserController::class, 'update']);
@@ -40,9 +40,7 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
 
     // FEEDBACKS
-    Route::post('/feedbacks', [FeedbackController::class, 'store']);
     Route::put('/feedbacks/{id}', [FeedbackController::class, 'update']);
-    Route::delete('/feedbacks/{id}', [FeedbackController::class, 'destroy']);
 
     // ORDERS
     Route::post('/orders', [OrderController::class, 'store']);
@@ -64,11 +62,8 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
     Route::put('/suppliers/{supplier}', [SupplierController::class, 'update']);
     Route::delete('/suppliers/{supplier}', [SupplierController::class, 'destroy']);
 
-    // DB IMPORT
-    Route::post('/import-db', [ExportDbController::class, 'import']);
-    Route::get('/export-db', [ExportDbController::class, 'export']);
-
-});
+Route::post('/import-db', [ExportDbController::class, 'import']);
+Route::get('/export-db', [ExportDbController::class, 'export']);
 
 // AUTH USER ROUTES
 Route::middleware('auth:sanctum')->group(function () {
@@ -76,6 +71,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show']);
     Route::post('/place-order', [OrderController::class, 'place_order']);
 });
+
+Route::post('/feedbacks', [FeedbackController::class, 'store']);
+Route::delete('/feedbacks/{id}', [FeedbackController::class, 'destroy']);
+
 
 
 // USERS
