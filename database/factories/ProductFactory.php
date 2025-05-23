@@ -19,8 +19,8 @@ class ProductFactory extends Factory
             'price' => fake()->randomFloat(2, 1, 100),
             'stock' => fake()->numberBetween(1, 20),
             'picture' => fake()->randomElement([
-                'https://ih1.redbubble.net/image.5160944228.1058/raf,360x360,075,t,fafafa:ca443f4786.u6.jpg',
-                'https://pictures.trbna.com/image/cfba80fb-24e6-4e1c-a911-57a8a0242358?width=1920&quality=70'
+                'https://images.pexels.com/photos/1478386/pexels-photo-1478386.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+                'https://images.pexels.com/photos/1727829/pexels-photo-1727829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
             ]),
             'status' => fake()->randomElement(['disponible', 'indisponible']),
             'supplier_id' => Supplier::inRandomOrder()->first()?->id ?? Supplier::factory(),
