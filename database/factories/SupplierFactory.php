@@ -20,7 +20,12 @@ class SupplierFactory extends Factory
             'name' => fake()->company(),
             'location' => fake()->country(),
             'description' => fake()->paragraph(),
-            'picture' => fake()->imageUrl(640, 480), 
+            'picture' => fake()->randomElement([
+                'https://logo-marque.com/wp-content/uploads/2020/09/Heineken-Logo.png',
+                'https://logo-marque.com/wp-content/uploads/2022/03/Kronenbourg-1664-Logo.png',
+                'https://logo-marque.com/wp-content/uploads/2022/03/Leffe-Logo.png',
+                'https://logos-marques.com/wp-content/uploads/2022/03/Corona-logo.png',
+            ]),
         ];
     }
 }
