@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->text('description'); 
             $table->decimal('price', 8, 2); 
             $table->integer('stock');
-            $table->string('picture');
+            $table->string('picture')->nullable();
             $table->string('status');
             $table->unsignedBigInteger('supplier_id');
             $table->unsignedBigInteger('category_id');
